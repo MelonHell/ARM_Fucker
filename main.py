@@ -1,43 +1,16 @@
-from chromote import Chromote
-import subprocess
-import random
 import json
-import time
-import urllib.request
 import os
+import random
+import subprocess
+import time
 import webbrowser
+
+from chromote import Chromote
 
 import scripts
 
 # SETTINGS
 configFileName = "ARM_Fucker.json"
-# pastebinLink = "https://pastebin.com/raw/xKRS7d3J"
-
-
-# def auth(stud_id=None, passwd=None):
-#     if stud_id is None or passwd is None:
-#         log(
-#             "Крч, чтоб сделать норм авторизацию, я эту хуйню вывел сюда, не ссы, мне твой пароль от Авроры нахуй не сдался")
-#         stud_id = input("Введи свой номер по списку: ")
-#         passwd = input("Введи пароль от этой хуйни: ")
-#         with open(configFileName, "w") as f:
-#             json.dump({"stud_id": stud_id, "password": passwd}, f)
-#             log("Пароль сохранён")
-#
-#     fp = urllib.request.urlopen(pastebinLink)
-#     pastebinText = fp.read().decode("utf8")
-#     for line in pastebinText.split("\n"):
-#         split = line.split("-")
-#
-#         if split[0] == stud_id:
-#             user_id = split[1]
-#             # if split[2].startswith("true"):
-#             return user_id, passwd
-#             # else:
-#             #     log("Крч великий и могущий MelonHell не дал тебе доступ к сие чуду")
-#             #     return False
-#     log("Ты ваще кто такой?")
-#     return False
 
 
 def log(text):
@@ -150,7 +123,7 @@ def main():
 
     log("Авторизация")
     tab.set_url(f"https://mirea2.aco-avrora.ru/student/?ArmUserId={login_data[0]}&ArmUserPassword={login_data[1]}")
-    # tab.set_url(f"https://mirea2.aco-avrora.ru/student/?ArmUserId=&ArmUserPassword=null")
+
     log("Ждем 5 сек")
     time.sleep(5)
     log("Выполнение основного скрипта")
@@ -159,8 +132,6 @@ def main():
         log("Применяем мою ахуительную тему")
         tab.evaluate(scripts.insertCss)
     log("АХУЕТЬ ОНО РАБОТАЕТ! Наверное..")
-    # log("стиль2")
-    # print(tab.evaluate(scripts.insertCssMce))
     log("Переход в режим консоли, если она тебе нахуй не нужна, можешь смело закрывать эту хуйню")
     while True:
         console(input("> "))
