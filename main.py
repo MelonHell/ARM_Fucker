@@ -11,33 +11,33 @@ import scripts
 
 # SETTINGS
 configFileName = "ARM_Fucker.json"
-pastebinLink = "https://pastebin.com/raw/xKRS7d3J"
+# pastebinLink = "https://pastebin.com/raw/xKRS7d3J"
 
 
-def auth(stud_id=None, passwd=None):
-    if stud_id is None or passwd is None:
-        log(
-            "Крч, чтоб сделать норм авторизацию, я эту хуйню вывел сюда, не ссы, мне твой пароль от Авроры нахуй не сдался")
-        stud_id = input("Введи свой номер по списку: ")
-        passwd = input("Введи пароль от этой хуйни: ")
-        with open(configFileName, "w") as f:
-            json.dump({"stud_id": stud_id, "password": passwd}, f)
-            log("Пароль сохранён")
-
-    fp = urllib.request.urlopen(pastebinLink)
-    pastebinText = fp.read().decode("utf8")
-    for line in pastebinText.split("\n"):
-        split = line.split("-")
-
-        if split[0] == stud_id:
-            user_id = split[1]
-            # if split[2].startswith("true"):
-            return user_id, passwd
-            # else:
-            #     log("Крч великий и могущий MelonHell не дал тебе доступ к сие чуду")
-            #     return False
-    log("Ты ваще кто такой?")
-    return False
+# def auth(stud_id=None, passwd=None):
+#     if stud_id is None or passwd is None:
+#         log(
+#             "Крч, чтоб сделать норм авторизацию, я эту хуйню вывел сюда, не ссы, мне твой пароль от Авроры нахуй не сдался")
+#         stud_id = input("Введи свой номер по списку: ")
+#         passwd = input("Введи пароль от этой хуйни: ")
+#         with open(configFileName, "w") as f:
+#             json.dump({"stud_id": stud_id, "password": passwd}, f)
+#             log("Пароль сохранён")
+#
+#     fp = urllib.request.urlopen(pastebinLink)
+#     pastebinText = fp.read().decode("utf8")
+#     for line in pastebinText.split("\n"):
+#         split = line.split("-")
+#
+#         if split[0] == stud_id:
+#             user_id = split[1]
+#             # if split[2].startswith("true"):
+#             return user_id, passwd
+#             # else:
+#             #     log("Крч великий и могущий MelonHell не дал тебе доступ к сие чуду")
+#             #     return False
+#     log("Ты ваще кто такой?")
+#     return False
 
 
 def log(text):
@@ -96,22 +96,13 @@ def main():
     try:
         with open(configFileName, "r") as f:
             jsonData = json.load(f)
-            if "stud_id" in jsonData and "password" in jsonData:
+            if "login" in jsonData and "password" in jsonData:
                 log("Обнаружен сохранёный пароль. Автоматическая авторизация")
-                stud_id = jsonData["stud_id"]
+                login = jsonData["login"]
                 password = jsonData["password"]
-                login_data = auth(stud_id, password)
-                if login_data == False:
-                    time.sleep(5)
-                    return
+                login_data = login, password
     except:
         pass
-
-    if login_data is None:
-        login_data = auth()
-        if login_data == False:
-            time.sleep(5)
-            return
 
     use_theme = input("Хош ахуеную кастомную тему? Y/n: ")
 
@@ -142,20 +133,20 @@ def main():
     global tab
     tab = chrome.tabs[0]
 
-    # for i in range(100):
-    #     if isLoggedIn:
-    #         continue
-    #     log("Ожидание входа")
-    #     tab.evaluate(scripts.buttonJs)
-    #     att_idUser = json.loads(tab.evaluate(scripts.getIdUser))
-    #     att_password = json.loads(tab.evaluate(scripts.getPassword))
-    #     if att_idUser['result']['result']['type'] == 'string' and att_password['result']['result']['type'] == 'string':
-    #         isLoggedIn = True
-    #         login = att_idUser['result']['result']['value']
-    #         password = att_password['result']['result']['value']
-    #         with open(configFileName, "w") as f:
-    #             json.dump({"login": login, "password": password}, f)
-    #         log("Пароль сохранён")
+    for i in range(100):
+        if login_data is not None:
+            continue
+        log("Ожидание входа")
+        tab.evaluate(scripts.buttonJs)
+        att_idUser = json.loads(tab.evaluate(scripts.getIdUser))
+        att_password = json.loads(tab.evaluate(scripts.getPassword))
+        if att_idUser['result']['result']['type'] == 'string' and att_password['result']['result']['type'] == 'string':
+            login = att_idUser['result']['result']['value']
+            password = att_password['result']['result']['value']
+            login_data = login, password
+            with open(configFileName, "w") as f:
+                json.dump({"login": login, "password": password}, f)
+            log("Пароль сохранён")
 
     log("Авторизация")
     tab.set_url(f"https://mirea2.aco-avrora.ru/student/?ArmUserId={login_data[0]}&ArmUserPassword={login_data[1]}")
